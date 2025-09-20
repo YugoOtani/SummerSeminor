@@ -16,8 +16,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "wps-cat.meow",
-        "title": "Meow"
+        "command": "wps-cat.enableExtension",
+        "title": "Enable/Disable WPS Cat"
       }
     ]
   },
