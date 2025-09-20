@@ -16,7 +16,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "wps-cat.enableExtension",
+        "command": "wpsCat.enableExtension",
         "title": "Enable/Disable WPS Cat"
       }
     ]

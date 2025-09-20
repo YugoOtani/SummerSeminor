@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 export function activate(context: vscode.ExtensionContext) {
 
 	const item = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 1000);
-  	item.command = 'wps-cat.enableExtension';
+  	item.command = 'wpsCat.enableExtension';
   	item.tooltip = 'Click to enable/disable WPS Cat';
   	item.show();
   	context.subscriptions.push(item);
@@ -70,8 +70,7 @@ export function activate(context: vscode.ExtensionContext) {
 	stopExtension();
 
 	// enable/disable command
-	let enableCommand = vscode.commands.registerCommand('wps-cat.enableExtension', () => {
-		vscode.window.showInformationMessage(`WPS Cat ${extensionEnabled ? 'disabled' : 'enabled'}!`);
+	let enableCommand = vscode.commands.registerCommand('wpsCat.enableExtension', () => {
 		if (extensionEnabled){
 			extensionEnabled = false;
 			stopExtension();
