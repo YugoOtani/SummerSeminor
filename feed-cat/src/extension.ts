@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { FeedViewProvider } from './feedViewProvider';
 
 export function activate(context: vscode.ExtensionContext) {
 	const item = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 1000);
@@ -51,12 +52,21 @@ export function activate(context: vscode.ExtensionContext) {
 
 
 	restart();
+	const provider = new FeedViewProvider(context.extensionUri);
+	provider.onInputProvided = (input: string) => {
+		if (input.replace(/\s/g, '') === '🐟') {
+			energy = 400;
+			restart();
+		}else {
+			vscode.window.showInformationMessage(`🐈「...」`);
+		}
+	};
+	const feedView = vscode.window.registerWebviewViewProvider(
+		FeedViewProvider.viewType,
+		provider,
+	);
 
-	const feedCmd = vscode.commands.registerCommand('feedCat.feed', () => {
-		energy = 400;
-		restart();
-	});
-	context.subscriptions.push(feedCmd);
+	context.subscriptions.push(feedView);
 
 
   	context.subscriptions.push(item, {dispose: () => { clearTimeout(timer); timer = undefined; }});

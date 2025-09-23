@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 
-export class ExecuteViewProvider implements vscode.WebviewViewProvider {
+export class FeedViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "feedCat.feedView";
+  public onInputProvided?: (input: string) => void;
 
   constructor(private readonly _extensionUri: vscode.Uri) {}
 
@@ -9,16 +10,15 @@ export class ExecuteViewProvider implements vscode.WebviewViewProvider {
     webviewView: vscode.WebviewView
   ) {
     webviewView.webview.options = {
-      enableScripts: true,
-      localResourceRoots: [this._extensionUri],
+      enableScripts: true
     };
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
-        case "executeCommand": {
-          executeCommand(data.value);
+        case "feedButtonClicked": {
+          this.onInputProvided?.(data.value);
           break;
         }
       }
@@ -33,7 +33,6 @@ export class ExecuteViewProvider implements vscode.WebviewViewProvider {
       vscode.Uri.joinPath(this._extensionUri, "media", "main.css"),
     );
 
-    // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce();
 
     return `<!DOCTYPE html>
@@ -46,9 +45,9 @@ export class ExecuteViewProvider implements vscode.WebviewViewProvider {
 			<title>Input</title>
 		</head>
 		<body>
-			<textarea id="command-input"></textarea>
+			<textarea id="input-area"></textarea>
 
-			<button class="execute-button">Run</button>
+			<button class="feed-button">Feed</button>
 
 			<script nonce="${nonce}" src="${scriptUri}"></script>
 		</body>

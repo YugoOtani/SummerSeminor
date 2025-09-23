@@ -17,7 +17,16 @@
         "command": "feedCat.feed",
         "title": "Feed Cat"
       }
-    ]
+    ],
+    "views": {
+      "explorer": [
+        {
+          "type": "webview",
+          "id": "feedCat.feedView",
+          "name": "Feed Cat"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
