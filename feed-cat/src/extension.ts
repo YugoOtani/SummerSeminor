@@ -52,7 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	restart();
 
-	const feedCmd = vscode.commands.registerCommand('wpsCatWebview.feed', () => {
+	const feedCmd = vscode.commands.registerCommand('feedCat.feed', () => {
 		energy = 400;
 		restart();
 	});

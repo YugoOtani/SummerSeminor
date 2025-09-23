@@ -1,6 +1,6 @@
 {
-  "name": "wps-cat-webview",
-  "displayName": "wps-cat-webview",
+  "name": "feed-cat",
+  "displayName": "feed-cat",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -14,7 +14,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "wpsCatWebview.feed",
+        "command": "feedCat.feed",
         "title": "Feed Cat"
       }
     ]

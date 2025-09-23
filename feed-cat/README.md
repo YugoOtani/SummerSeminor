@@ -1,6 +1,6 @@
-# wps-cat-webview README
+# feed-cat README
 
-This is the README for your extension "wps-cat-webview". After writing up a brief description, we recommend including the following sections.
+This is the README for your extension "feed-cat". After writing up a brief description, we recommend including the following sections.
 
 ## Features
 
