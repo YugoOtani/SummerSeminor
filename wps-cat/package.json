@@ -19,7 +19,13 @@
         "command": "wpsCat.enableExtension",
         "title": "Enable/Disable WPS Cat"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "WPS Cat",
+      "properties": {
+        "wpsCat.updateIntervalMs": { "type": "number", "default": 500, "minimum": 100, "description": "WPS計測の間隔(ms)" }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

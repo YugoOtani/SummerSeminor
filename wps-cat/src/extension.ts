@@ -1,4 +1,3 @@
-import { clear } from 'console';
 import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -9,8 +8,13 @@ export function activate(context: vscode.ExtensionContext) {
   	item.show();
   	context.subscriptions.push(item);
 
+	const cfg = () => vscode.workspace.getConfiguration('wpsCat');
+  	const readCfg = () => ({
+    	wpsUpdateMs: cfg().get<number>('updateIntervalMs', 500)
+  	});
+
 	// locals
-	let calcWpsIntervalMs = 500;
+	let calcWpsIntervalMs = readCfg().wpsUpdateMs;
 	let calcWpsTimer: ReturnType<typeof setInterval> | undefined;
 	let animTimer: ReturnType<typeof setInterval> | undefined;
 	let wordCnt = 0;
@@ -44,15 +48,16 @@ export function activate(context: vscode.ExtensionContext) {
 			clearInterval(calcWpsTimer);
 			calcWpsTimer = undefined;
 		}
-	}
+	};
 	const stopExtension = () => {
 		stopTimer();
 		item.text = `😴 🐈`;
-	}
+	};
 	const restartExtension = () => {
 		let frameIndex = 0;
 		wordCnt = 0;
 		stopTimer();
+		item.text = frames[frameIndex];
 		calcWpsTimer = setInterval(() => {
 			const animIntervalMs = wpsToAnimIntervalMs(wordCnt / (calcWpsIntervalMs / 1000));
 			if (animTimer) clearInterval(animTimer);
@@ -66,7 +71,7 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 			wordCnt = 0;
 		}, calcWpsIntervalMs);
-	}
+	};
 	stopExtension();
 
 	// enable/disable command
@@ -84,7 +89,13 @@ export function activate(context: vscode.ExtensionContext) {
 		wordCnt += len;
   	});
 
-	context.subscriptions.push(enableCommand, docChangeHandler);
+	const cfgCommand = vscode.workspace.onDidChangeConfiguration((ev) => {
+    	if (!ev.affectsConfiguration('wpsCat')) return;
+		calcWpsIntervalMs = readCfg().wpsUpdateMs;
+		if (extensionEnabled) restartExtension();
+  	});
+
+	context.subscriptions.push(enableCommand, docChangeHandler, cfgCommand);
 }
 
 function wpsToAnimIntervalMs(
