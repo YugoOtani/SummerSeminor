@@ -1,26 +1,74 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+	const item = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 1000);
+  	item.show();
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "wps-cat-webview" is now active!');
+	const frames = [
+    '🐈         ', 
+    ' 🐈        ', 
+    '  🐈       ', 
+    '   🐈      ', 
+    '    🐈     ', 
+    '     🐈    ',
+    '      🐈   ',
+    '       🐈  ',
+    '        🐈 ',
+    '         🐈',
+    '        🐈 ',
+    '       🐈  ',
+    '      🐈   ',
+    '     🐈    ',
+    '    🐈     ',
+    '   🐈      ',
+    '  🐈       ',
+    ' 🐈        '];
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('wps-cat-webview.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from wps-cat-webview!');
+	let fi = 0;
+	let energy = 400;
+	let timer: ReturnType<typeof setTimeout> | undefined = undefined;
+
+	const restart = () => {
+		if (timer) {
+			clearTimeout(timer);
+			timer = undefined;
+		}
+
+		const updInterval = energyToUpdInterval(energy);
+		if (updInterval === undefined) {
+			item.text = '😴 🐈';
+			return;
+		}
+		
+		timer = setTimeout(() => {
+			item.text = frames[fi];
+			fi = (fi + 1) % frames.length;
+
+			energy = Math.max(0, energy - 1);
+			restart();
+		}, updInterval);
+	};
+
+
+	restart();
+
+	const feedCmd = vscode.commands.registerCommand('wpsCatWebview.feed', () => {
+		energy = 400;
+		restart();
 	});
+	context.subscriptions.push(feedCmd);
 
-	context.subscriptions.push(disposable);
+
+  	context.subscriptions.push(item, {dispose: () => { clearTimeout(timer); timer = undefined; }});
 }
 
-// This method is called when your extension is deactivated
+function energyToUpdInterval(energy: number): number | undefined {
+	if (energy >= 150) return 20;
+	if (energy >= 40) return 80;
+	if (energy >= 1) return 120;
+	return undefined;
+}
+
 export function deactivate() {}
+
+
